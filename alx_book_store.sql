@@ -1,118 +1,45 @@
--- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
---
--- Host: localhost    Database: alx_book_store
--- ------------------------------------------------------
--- Server version	8.0.43
+CREATE DATABASE IF NOT EXISTS alx_book_store;
+USE alx_book_store;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- Table: Authors
+CREATE TABLE Authors (
+    author_id INT PRIMARY KEY AUTO_INCREMENT,
+    author_name VARCHAR(215)
+);
 
---
--- Table structure for table `authors`
---
+-- Table: Books
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(130),
+    author_id INT,
+    price DOUBLE,
+    publication_date DATE,
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+);
 
-DROP TABLE IF EXISTS `authors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `authors` (
-  `author_id` int NOT NULL AUTO_INCREMENT,
-  `author_name` varchar(215) NOT NULL,
-  PRIMARY KEY (`author_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Table: Customers
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(215),
+    email VARCHAR(215),
+    address TEXT
+);
 
---
--- Table structure for table `books`
---
+-- Table: Orders
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+);
 
-DROP TABLE IF EXISTS `books`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `books` (
-  `book_id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(130) NOT NULL,
-  `author_id` int DEFAULT NULL,
-  `price` double DEFAULT NULL,
-  `publication_date` date DEFAULT NULL,
-  PRIMARY KEY (`book_id`),
-  KEY `author_id` (`author_id`),
-  CONSTRAINT `books_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `authors` (`author_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Table: Order_Details
+CREATE TABLE Order_Details (
+    orderdetailid INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    book_id INT,
+    quantity DOUBLE,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
 
---
--- Table structure for table `customers`
---
-
-DROP TABLE IF EXISTS `customers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customers` (
-  `customer_id` int NOT NULL AUTO_INCREMENT,
-  `customer_name` varchar(215) NOT NULL,
-  `email` varchar(215) DEFAULT NULL,
-  `address` text,
-  PRIMARY KEY (`customer_id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `order_details`
---
-
-DROP TABLE IF EXISTS `order_details`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `order_details` (
-  `orderdetailid` int NOT NULL AUTO_INCREMENT,
-  `order_id` int DEFAULT NULL,
-  `book_id` int DEFAULT NULL,
-  `quantity` double DEFAULT NULL,
-  PRIMARY KEY (`orderdetailid`),
-  KEY `order_id` (`order_id`),
-  KEY `book_id` (`book_id`),
-  CONSTRAINT `order_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
-  CONSTRAINT `order_details_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `orders`
---
-
-DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orders` (
-  `order_id` int NOT NULL AUTO_INCREMENT,
-  `customer_id` int DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
-  PRIMARY KEY (`order_id`),
-  KEY `customer_id` (`customer_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping routines for database 'alx_book_store'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-10-23 13:20:19
